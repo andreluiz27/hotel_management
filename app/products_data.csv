@@ -1,0 +1,31 @@
+ID,NAME,CATEGORY,MANUFACTURER,PRICE_BRL,CEP
+1,Product 1,Books,Whirlpool,4731.03,38440032
+2,Product 2,Toys,Adidas,8062.93,35570000
+3,Product 3,Books,Dell,2963.19,35300026
+4,Product 4,Books,Apple,671.15,38200145
+5,Product 5,Clothing,Apple,7360.90,63900000
+6,Product 6,Clothing,LG,278.46,36925000
+7,Product 7,Toys,Dell,6466.71,38600104
+8,Product 8,Clothing,LG,5127.50,35600521
+9,Product 9,Home Appliances,LG,2246.81,39300152
+10,Product 10,Electronics,Apple,7786.18,63800000
+11,Product 11,Home Appliances,Whirlpool,7551.49,64150000
+12,Product 12,Electronics,Adidas,7279.64,36309003
+13,Product 13,Clothing,Bosch,2235.90,64800045
+14,Product 14,Books,Samsung,2459.15,36880003
+15,Product 15,Electronics,Adidas,310.18,63400110
+16,Product 16,Books,Bosch,9731.72,35660004
+17,Product 17,Home Appliances,Samsung,1666.46,35700101
+18,Product 18,Clothing,Apple,6101.36,39304102
+19,Product 19,Books,Sony,6835.26,64850013
+20,Product 20,Clothing,LG,3271.13,36910103
+21,Product 21,Electronics,Samsung,9829.82,36630106
+22,Product 22,Toys,Apple,2569.96,37250100
+23,Product 23,Electronics,Sony,9755.58,64690078
+24,Product 24,Clothing,Bosch,6080.27,63860009
+25,Product 25,Toys,Nike,883.30,37300054
+26,Product 26,Clothing,Whirlpool,4488.64,35930007
+27,Product 27,Home Appliances,Dell,9011.19,36420007
+28,Product 28,Home Appliances,Adidas,6583.80,64760082
+29,Product 29,Clothing,Adidas,9246.08,38720024
+30,Product 30,Home Appliances,Bosch,8688.43,63440003
