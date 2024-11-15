@@ -4,15 +4,14 @@ from .models import Room
 
 class RoomAdmin(admin.ModelAdmin):
     list_display = [
-        "room_number",
         "room_status",
         "floor",
         "room_type",
         "created_at",
         "updated_at",
     ]
-    search_fields = ["room_number", "floor", "room_type"]
-    list_filter = ["room_number", "floor", "room_type"]
+    search_fields = ["floor", "room_type"]
+    list_filter = ["floor", "room_type"]
 
     class Meta:
         model = Room

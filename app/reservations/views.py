@@ -1,20 +1,21 @@
-from rest_framework import generics, permissions
+from rest_framework import generics
+from core.permissions import IsRegularStaff, IsManager, IsReservationOwner
 import django_filters.rest_framework
 
 from .serializers import (
     ReservationSerializer,
     CreateReservationSerializer,
     ReservationUpdateCheckinSerializer,
+    ReservationUpdateCheckoutSerializer,
 )
 from .models import Reservation
+from rooms.models import Room
 
 
 class ReservationListView(generics.ListAPIView):
-    # queryset = Reservation.objects.all()
     serializer_class = ReservationSerializer
-    permission_classes = [permissions.AllowAny]
     filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
-
+    permission_classes = (IsRegularStaff | IsManager,)
     filterset_fields = {
         "reservation_status": ["exact"],
         "guest": ["exact"],
@@ -38,25 +39,22 @@ class ReservationListView(generics.ListAPIView):
 class ReservationCreateView(generics.CreateAPIView):
     queryset = Reservation.objects.all()
     serializer_class = CreateReservationSerializer
+    permission_classes = [IsRegularStaff | IsManager]
 
 
 class ReservationUpdateCheckinView(generics.UpdateAPIView):
     queryset = Reservation.objects.all()
     serializer_class = ReservationUpdateCheckinSerializer
-
-# class RoomListView(generics.ListAPIView):
-#     queryset = Room.objects.all()
-#     serializer_class = RoomSerializer
-#     permission_classes = [permissions.AllowAny]
+    permission_classes = [IsRegularStaff | IsManager]
 
 
-# class RoomDetailView(generics.RetrieveAPIView):
-#     queryset = Room.objects.all()
-#     serializer_class = RoomSerializer
-#     permission_classes = [permissions.AllowAny]
+class ReservationUpdateCheckoutView(generics.RetrieveUpdateAPIView):
+    queryset = Reservation.objects.all()
+    serializer_class = ReservationUpdateCheckoutSerializer
+    permission_classes = [IsRegularStaff | IsManager]
 
 
-# class RoomUpdateView(generics.UpdateAPIView):
-#     queryset = Room.objects.all()
-#     serializer_class = RoomUpdateSerializer
-#     permission_classes = [permissions.IsAuthenticated]
+class ReservationDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Reservation.objects.all()
+    serializer_class = ReservationSerializer
+    permission_classes = [IsRegularStaff | IsManager | IsReservationOwner]

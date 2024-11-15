@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "rest_framework_simplejwt",
     "django_filters",
     "guests",
     "staffs",
@@ -145,10 +146,32 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # User model
 AUTH_USER_MODEL = "staffs.Staff"
+AUTHENTICATION_BACKENDS = ["core.backends.EmailBackend"]
 
 REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": [
         "django_filters.rest_framework.DjangoFilterBackend"
     ],
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ],
 }
 
+TEST_LOGGER_LEVEL = os.environ.get("TEST_LOGGER_LEVEL", default="DEBUG")
+
+# CELERY STUFF
+CELERY_BROKER_URL = "redis://redis:6379"
+CELERY_RESULT_BACKEND = "redis://redis:6379"
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+
+# SMTP SETTINGS
+MAILING_ACTIVE = os.environ.get("MAILING_ACTIVATED", default=False)
+EMAIL_HOST = os.environ.get("EMAIL_HOST")
+EMAIL_USE_TLS = True
+EMAIL_PORT = os.environ.get("EMAIL_PORT")
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_SENDER")
+EMAIL_SENDER = os.environ.get("EMAIL_SENDER")
+EMAIL_RECEIVER = os.environ.get("EMAIL_RECEIVER")

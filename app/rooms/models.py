@@ -21,12 +21,13 @@ class Room(models.Model):
     ]
 
     id = models.IntegerField(primary_key=True)
-    room_number = models.IntegerField()
     room_status = models.CharField(choices=room_status_choices)
     floor = models.IntegerField()
     room_type = models.CharField(max_length=255, choices=room_type_choices)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+   
+
     def __str__(self):
-        return str(self.room_number)
+        return str(self.id)

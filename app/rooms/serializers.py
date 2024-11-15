@@ -7,7 +7,6 @@ class RoomSerializer(serializers.ModelSerializer):
         model = Room
         fields = [
             "id",
-            "room_number",
             "room_type",
             "room_status",
             "floor",

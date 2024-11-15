@@ -8,20 +8,14 @@ urlpatterns = [
         views.ReservationCreateView.as_view(),
         name="reservation-create",
     ),
-    # path(
-    #     "<int:pk>/",
-    #     views.ReservationDetailView.as_view(),
-    #     name="reservation-detail",
-    # ),
-    # path(
-    #     "<int:pk>/update/",
-    #     views.ReservationUpdateView.as_view(),
-    #     name="reservation-update",
-    # ),
     path(
         "<int:pk>/update/checkin",
         views.ReservationUpdateCheckinView.as_view(),
         name="reservation-update-checkin",
     ),
-    # path("<int:pk>/", views.RoomDetailView.as_view(), name="reservation-detail"),
+    path(
+        "<int:pk>/update/checkout",
+        views.ReservationUpdateCheckoutView.as_view(),
+        name="reservation-update-checkout",
+    ),
 ]

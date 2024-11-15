@@ -39,9 +39,18 @@ migrate:
 createsuperuser:
 	$(DOCKER) exec -it bix_app python manage.py createsuperuser
 
-.PHONY: test
+.PHONY: test 
 test:
-	$(DOCKER) exec -it bix_app python manage.py test --debug-mode
+	$(DOCKER) exec -it bix_app python manage.py test --debug-mode --failfast --traceback
+
+.PHONY: test-app-rooms
+test-app-room:
+	$(DOCKER) exec -it bix_app python manage.py test rooms --debug-mode --failfast --traceback
+
+.PHONY: refresh_fixtures
+refresh_fixtures:
+	$(DOCKER) exec -it bix_app python manage.py dumpdata > initial_test_data.json;
+	$(DOCKER) cp bix_app:/usr/src/app/initial_test_data.json .
 
 
 

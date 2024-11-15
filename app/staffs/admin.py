@@ -7,6 +7,7 @@ class StaffAdmin(admin.ModelAdmin):
         "id",
         "first_name",
         "last_name",
+        "role",
         "email",
         "phone",
         "address",

@@ -2,6 +2,8 @@ from rest_framework import serializers
 from .models import Reservation
 from rooms.serializers import RoomSerializer
 from guests.serializers import GuestSerializer
+from core.tasks import send_email_task
+from core.settings import EMAIL_HOST_USER, MAILING_ACTIVE
 
 
 class ReservationSerializer(serializers.ModelSerializer):
@@ -82,6 +84,18 @@ class CreateReservationSerializer(serializers.ModelSerializer):
             instance.room.room_status = "Occupied"
             instance.room.save()
 
+        if MAILING_ACTIVE:
+            send_email_task.delay(
+                subject="Reservation Created",
+                message="Your reservation has been created.",
+                data={
+                    "reservation_id": instance.id,
+                    "guest": instance.staff.email,  # todo: change staff to user
+                },
+                sender=EMAIL_HOST_USER,
+                receiver=instance.staff.email,
+            )
+
         return instance
 
 
@@ -96,6 +110,20 @@ class ReservationUpdateSerializer(serializers.ModelSerializer):
             "paid_amount",
         ]
 
+    def save(self):
+        instance = super().save()
+
+        send_email_task.delay(
+            "Reservation Updated",
+            {
+                "reservation_id": instance.id,
+                "guest": instance.staff.email,  # todo: change staff to user
+            },
+            "Your reservation has been updated.",
+        )
+
+        return instance
+
 
 class ReservationUpdateCheckinSerializer(serializers.ModelSerializer):
     class Meta:
@@ -103,8 +131,8 @@ class ReservationUpdateCheckinSerializer(serializers.ModelSerializer):
         fields = ["room", "payment_method", "paid_amount"]
         extra_kwargs = {
             "room": {"required": False},
-            "payment_method": {"required": True},
-            "paid_amount": {"required": True},
+            "payment_method": {"required": False},
+            "paid_amount": {"required": False},
         }
 
     def validate(self, data):
@@ -122,6 +150,26 @@ class ReservationUpdateCheckinSerializer(serializers.ModelSerializer):
         if data.get("room", None) and data["room"].room_status != "Available":
             raise serializers.ValidationError("The room is not available.")
 
+        # check if checkin paid amount is positive
+        if data.get("paid_amount", None) and data["paid_amount"] < 0:
+            raise serializers.ValidationError("Paid amount must be positive.")
+
+        # if reservation is already paid, the payment fields are not required
+        if self.instance.payment_status == "Paid" and (
+            data.get("payment_method", None) or data.get("paid_amount", None)
+        ):
+            raise serializers.ValidationError(
+                "Payment fields are not required,reservation is already paid."
+            )
+
+        if self.instance.payment_status != "Paid" and (
+            not data.get("payment_method", None)
+            or not data.get("paid_amount", None)
+        ):
+            raise serializers.ValidationError(
+                "Payment fields are required, reservation is not paid."
+            )
+
         return data
 
     def save(self):
@@ -134,6 +182,54 @@ class ReservationUpdateCheckinSerializer(serializers.ModelSerializer):
         instance.reservation_status = "Checked In"
         instance.payment_status = "Paid"
         instance.save()
+        if MAILING_ACTIVE:
+            send_email_task.delay(
+                "Reservation Checked In",
+                {
+                    "reservation_id": instance.id,
+                    "guest": instance.staff.email,  # todo: change staff to user
+                },
+                "Your reservation has been checked in.",
+            )
+
+        return instance
+
+
+class ReservationUpdateCheckoutSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Reservation
+        fields = []
+
+    def validate(self, data):
+        # check if this reservation is already checked out
+        if self.instance.reservation_status == "Checked Out":
+            raise serializers.ValidationError(
+                "Reservation is already checked out."
+            )
+        if self.instance.reservation_status != "Checked In":
+            raise serializers.ValidationError(
+                "Reservation is not checked in."
+            )
+
+        return data
+
+    def save(self):
+        instance = super().save()
+
+        instance.reservation_status = "Checked Out"
+        instance.room.room_status = "Cleaning"
+        instance.save()
+        send_email_task.delay(
+            subject="Reservation Checked Out",
+            data={
+                "reservation_id": instance.id,
+                "guest": instance.staff.email,  # todo: change staff to user
+            },
+            message="Your reservation has been checked out.",
+            sender=EMAIL_HOST_USER,
+            receiver=instance.staff.email,
+        )
+
         return instance
 
 
