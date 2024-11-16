@@ -42,8 +42,7 @@ NEW_RESERVATION_PAYLOAD = {
     "payment_status": "Paid",
     "paid_amount": 100.0,
     "payment_method": "Credit Card",
-    "guest": 5,
-    "staff": 2,
+    "user": 2,
     "room": AVAILABLE_ROOM_ID,
 }
 
@@ -71,8 +70,7 @@ class ReservationTestCase(TestCase):
             payment_status="Paid",
             paid_amount=100.0,
             payment_method="Credit Card",
-            guest=5,
-            staff=owner_of_reservation.id,
+            user=owner_of_reservation.id,
             room=room_available.id,
         )
         response = self.client.post(
@@ -115,8 +113,7 @@ class ReservationTestCase(TestCase):
             payment_status="Paid",
             paid_amount=100.0,
             payment_method="Credit Card",
-            guest=5,
-            staff=owner_of_reservation.id,
+            user=owner_of_reservation.id,
             room="",
         )
 
@@ -142,8 +139,7 @@ class ReservationTestCase(TestCase):
             payment_status="Paid",
             paid_amount=100.0,
             payment_method="",
-            guest=5,
-            staff=owner_of_reservation.id,
+            user=owner_of_reservation.id,
             room=room_available.id,
         )
 
@@ -169,8 +165,7 @@ class ReservationTestCase(TestCase):
             payment_status="Paid",
             paid_amount="",
             payment_method="Credit Card",
-            guest=5,
-            staff=owner_of_reservation.id,
+            user=owner_of_reservation.id,
             room=room_available.id,
         )
 
@@ -197,8 +192,7 @@ class ReservationTestCase(TestCase):
             payment_status="Paid",
             paid_amount=100.0,
             payment_method="Credit Card",
-            guest=5,
-            staff=owner_of_reservation.id,
+            user=owner_of_reservation.id,
             room=room_not_available.id,
         )
 
@@ -220,8 +214,7 @@ class ReservationTestCase(TestCase):
             payment_status="Paid",
             paid_amount=100.0,
             payment_method="Credit Card",
-            guest=5,
-            staff=owner_of_reservation.id,
+            user=owner_of_reservation.id,
             room=room_available.id,
         )
         regular_staff_token = get_regular_staff_token(self.client)
@@ -244,8 +237,7 @@ class ReservationTestCase(TestCase):
             payment_status="Paid",
             paid_amount=100.0,
             payment_method="Credit Card",
-            guest=5,
-            staff=owner_of_reservation.id,
+            user=owner_of_reservation.id,
             room=room_available.id,
         )
         regular_staff_token = get_regular_staff_token(self.client)
@@ -269,8 +261,7 @@ class ReservationTestCase(TestCase):
             payment_status="Paid",
             paid_amount=100.0,
             payment_method="Credit Card",
-            guest=5,
-            staff=owner_of_reservation.id,
+            user=owner_of_reservation.id,
             room=room_available.id,
         )
 
@@ -295,15 +286,13 @@ class ReservationTestCase(TestCase):
         )
 
         reservation = make_reservation_in_db(
-            self,
             date_start="2022-01-01T00:00:00Z",
             date_end="2022-01-02T00:00:00Z",
             reservation_status="Confirmed",
             payment_status="Pending",
             paid_amount="",
             payment_method="",
-            guest_id=5,
-            staff_id=regular_staff.id,
+            user_id=regular_staff.id,
             room_id=available_room.id,
         )
 
@@ -340,15 +329,13 @@ class ReservationTestCase(TestCase):
         occupied_room = get_room_in_db_by_status("Occupied")
         guest = make_guest_in_db()
         reservation = make_reservation_in_db(
-            self,
             date_start="2022-01-01T00:00:00Z",
             date_end="2022-01-02T00:00:00Z",
             reservation_status="Confirmed",
             payment_status="Paid",
             paid_amount=100.0,
             payment_method="Credit Card",
-            guest_id=5,
-            staff_id=guest.id,
+            user_id=guest.id,
             room_id=occupied_room.id,
         )
         regular_staff_token = get_regular_staff_token(self.client)
@@ -377,15 +364,13 @@ class ReservationTestCase(TestCase):
         available_room = get_room_in_db_by_status("Available")
         guest = make_guest_in_db()
         reservation = make_reservation_in_db(
-            self,
             date_start="2022-01-01T00:00:00Z",
             date_end="2022-01-02T00:00:00Z",
             reservation_status="Confirmed",
             payment_status="Paid",
             paid_amount=100.0,
             payment_method="Credit Card",
-            guest_id=5,
-            staff_id=guest.id,
+            user_id=guest.id,
             room_id=available_room.id,
         )
         regular_staff_token = get_regular_staff_token(self.client)
@@ -413,15 +398,13 @@ class ReservationTestCase(TestCase):
         available_room = get_room_in_db_by_status("Available")
         guest = make_guest_in_db()
         reservation = make_reservation_in_db(
-            self,
             date_start="2022-01-01T00:00:00Z",
             date_end="2022-01-02T00:00:00Z",
             reservation_status="Confirmed",
             payment_status="Pending",
             paid_amount="",
             payment_method="",
-            guest_id=5,
-            staff_id=guest.id,
+            user_id=guest.id,
             room_id=available_room.id,
         )
         regular_staff_token = get_regular_staff_token(self.client)
@@ -449,15 +432,13 @@ class ReservationTestCase(TestCase):
         available_room = get_room_in_db_by_status("Available")
         guest = make_guest_in_db()
         reservation = make_reservation_in_db(
-            self,
             date_start="2022-01-01T00:00:00Z",
             date_end="2022-01-02T00:00:00Z",
             reservation_status="Confirmed",
             payment_status="Pending",
             paid_amount="",
             payment_method="",
-            guest_id=5,
-            staff_id=guest.id,
+            user_id=guest.id,
             room_id=available_room.id,
         )
         regular_staff_token = get_regular_staff_token(self.client)
@@ -486,15 +467,13 @@ class ReservationTestCase(TestCase):
         available_room = get_room_in_db_by_status("Occupied")
         guest = make_guest_in_db()
         reservation = make_reservation_in_db(
-            self,
             date_start="2022-01-01T00:00:00Z",
             date_end="2022-01-02T00:00:00Z",
             reservation_status="Checked In",
             payment_status="Paid",
             paid_amount=100.0,
             payment_method="Credit Card",
-            guest_id=5,
-            staff_id=guest.id,
+            user_id=guest.id,
             room_id=available_room.id,
         )
         regular_staff_token = get_regular_staff_token(self.client)
@@ -525,7 +504,7 @@ def test_reservation_checkout_endpoint_without_checkin(self):
         paid_amount=100.0,
         payment_method="Credit Card",
         guest_id=5,
-        staff_id=guest.id,
+        user_id=guest.id,
         room_id=available_room.id,
     )
     regular_staff_token = get_regular_staff_token(self.client)
@@ -546,5 +525,40 @@ def test_reservation_checkout_endpoint_without_checkin(self):
 
 
 
+# TODO: Tests related to see all reservations
+
+def test_reservation_list_endpoint(self):
+    regular_staff_token = get_regular_staff_token(self.client)
+    response = self.client.get(
+        reverse("reservation-list"),
+        headers={"Authorization": f"Bearer {regular_staff_token}"},
+    )
+    # check status code
+    try:
+        self.assertEqual(response.status_code, 200)
+    except AssertionError:
+        TestLogger.debug(response.data)
+        raise AssertionError
+
+
+def test_reservation_list_endpoint_filter_confirmed(self):
+    regular_staff_token = get_regular_staff_token(self.client)
+    qty_confirmed_reservations = Reservation.objects.filter(
+        reservation_status="Confirmed"
+    ).count()
+
+    response = self.client.get(
+        reverse("reservation-list"),
+        {"reservation_status": "Confirmed"},
+        headers={"Authorization": f"Bearer {regular_staff_token}"},
+    )
+    # check status code
+    try:
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), qty_confirmed_reservations)
+    except AssertionError:
+        TestLogger.debug(response.data)
+        raise AssertionError
+
+
 # TODO: Tests related to auth
-# TODO: Testes related to see all reservations

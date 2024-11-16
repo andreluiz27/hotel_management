@@ -55,8 +55,7 @@ class Reservation(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     # foreign keys
-    guest = models.ForeignKey("guests.Guest", on_delete=models.CASCADE)
-    staff = models.ForeignKey("staffs.Staff", on_delete=models.CASCADE)
+    user = models.ForeignKey("users.CustomUser", on_delete=models.CASCADE)
     room = models.ForeignKey(
         "rooms.Room", on_delete=models.CASCADE, blank=True, null=True
     )

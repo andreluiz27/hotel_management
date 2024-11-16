@@ -43,11 +43,9 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework_simplejwt",
     "django_filters",
-    "guests",
-    "staffs",
+    "users",
     "reservations",
     "rooms",
-    "hosting",
 ]
 
 MIDDLEWARE = [
@@ -145,7 +143,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 # User model
-AUTH_USER_MODEL = "staffs.Staff"
+AUTH_USER_MODEL = "users.CustomUser"
 AUTHENTICATION_BACKENDS = ["core.backends.EmailBackend"]
 
 REST_FRAMEWORK = {

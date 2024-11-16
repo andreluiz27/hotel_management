@@ -1,22 +1,20 @@
 from rest_framework import serializers
 from .models import Reservation
 from rooms.serializers import RoomSerializer
-from guests.serializers import GuestSerializer
 from core.tasks import send_email_task
 from core.settings import EMAIL_HOST_USER, MAILING_ACTIVE
 
 
 class ReservationSerializer(serializers.ModelSerializer):
     room = RoomSerializer()
-    guest = GuestSerializer()
-    staff = serializers.SerializerMethodField("get_staff")
+    user = serializers.SerializerMethodField("get_user")
 
-    def get_staff(self, obj):
+    def get_user(self, obj):
         return {
-            "first_name": obj.staff.first_name,
-            "last_name": obj.staff.last_name,
-            "email": obj.staff.email,
-            "id": obj.staff.id,
+            "first_name": obj.user.first_name,
+            "last_name": obj.user.last_name,
+            "email": obj.user.email,
+            "id": obj.user.id,
         }
 
     class Meta:
@@ -25,8 +23,7 @@ class ReservationSerializer(serializers.ModelSerializer):
             "id",
             "room",
             "reservation_status",
-            "guest",
-            "staff",
+            "user",
             "payment_status",
             "payment_method",
             "paid_amount",
@@ -48,8 +45,7 @@ class CreateReservationSerializer(serializers.ModelSerializer):
             "payment_status",
             "paid_amount",
             "payment_method",
-            "guest",
-            "staff",
+            "user",
             "room",
         ]
         extra_kwargs = {
@@ -57,8 +53,7 @@ class CreateReservationSerializer(serializers.ModelSerializer):
             "date_end": {"required": True},
             "reservation_status": {"required": True},
             "payment_status": {"required": True},
-            "guest": {"required": True},
-            "staff": {"required": True},
+            "user": {"required": True},
         }
 
     def validate(self, data):
@@ -90,10 +85,10 @@ class CreateReservationSerializer(serializers.ModelSerializer):
                 message="Your reservation has been created.",
                 data={
                     "reservation_id": instance.id,
-                    "guest": instance.staff.email,  # todo: change staff to user
+                    "guest": instance.user.email,
                 },
                 sender=EMAIL_HOST_USER,
-                receiver=instance.staff.email,
+                receiver=instance.user.email,
             )
 
         return instance
@@ -117,7 +112,7 @@ class ReservationUpdateSerializer(serializers.ModelSerializer):
             "Reservation Updated",
             {
                 "reservation_id": instance.id,
-                "guest": instance.staff.email,  # todo: change staff to user
+                "guest": instance.user.email,
             },
             "Your reservation has been updated.",
         )
@@ -187,7 +182,7 @@ class ReservationUpdateCheckinSerializer(serializers.ModelSerializer):
                 "Reservation Checked In",
                 {
                     "reservation_id": instance.id,
-                    "guest": instance.staff.email,  # todo: change staff to user
+                    "guest": instance.user.email,
                 },
                 "Your reservation has been checked in.",
             )
@@ -207,9 +202,7 @@ class ReservationUpdateCheckoutSerializer(serializers.ModelSerializer):
                 "Reservation is already checked out."
             )
         if self.instance.reservation_status != "Checked In":
-            raise serializers.ValidationError(
-                "Reservation is not checked in."
-            )
+            raise serializers.ValidationError("Reservation is not checked in.")
 
         return data
 
@@ -223,11 +216,11 @@ class ReservationUpdateCheckoutSerializer(serializers.ModelSerializer):
             subject="Reservation Checked Out",
             data={
                 "reservation_id": instance.id,
-                "guest": instance.staff.email,  # todo: change staff to user
+                "guest": instance.user.email,  
             },
             message="Your reservation has been checked out.",
             sender=EMAIL_HOST_USER,
-            receiver=instance.staff.email,
+            receiver=instance.user.email,
         )
 
         return instance

@@ -18,7 +18,6 @@ class ReservationListView(generics.ListAPIView):
     permission_classes = (IsRegularStaff | IsManager,)
     filterset_fields = {
         "reservation_status": ["exact"],
-        "guest": ["exact"],
     }
 
     def get_queryset(self):

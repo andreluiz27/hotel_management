@@ -5,8 +5,7 @@ from reservations.models import Reservation
 class ReservationAdmin(admin.ModelAdmin):
     list_display = (
         "id",
-        "guest",
-        "staff",
+        "user",
         "room",
         "payment_method",
         "paid_amount",

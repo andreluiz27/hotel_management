@@ -1,8 +1,8 @@
 from django.contrib import admin
-from staffs.models import Staff
+from users.models import CustomUser
 
 
-class StaffAdmin(admin.ModelAdmin):
+class UserAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "first_name",
@@ -19,4 +19,4 @@ class StaffAdmin(admin.ModelAdmin):
     )
 
 
-admin.site.register(Staff, StaffAdmin)
+admin.site.register(CustomUser, UserAdmin)

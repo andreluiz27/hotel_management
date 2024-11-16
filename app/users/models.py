@@ -5,7 +5,7 @@ from django.contrib.auth.models import Group
 # Create your models here.
 
 
-class Staff(AbstractUser):
+class CustomUser(AbstractUser):
     id = models.AutoField(primary_key=True)
     email = models.CharField(max_length=255, unique=True)
     phone = models.CharField(max_length=255)

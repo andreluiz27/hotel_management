@@ -1,6 +1,5 @@
 from rest_framework import serializers
-from .models import Staff  # todo: change this to User
-from core.tasks import send_email_task
+from .models import CustomUser  
 from core.settings import EMAIL_HOST_USER
 
 
@@ -9,7 +8,7 @@ class UserSerializer(
 ):  # todo: change this to  UserSerializer
 
     class Meta:
-        model = Staff  # Todo: change this to User
+        model = CustomUser  
         fields = [
             "id",
             "first_name",
@@ -24,7 +23,7 @@ class UserSerializer(
 
 class UserCreateSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Staff  # todo: change this to User
+        model = CustomUser  
         fields = [
             "first_name",
             "last_name",
@@ -49,7 +48,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
 class UserStaffUpdateSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Staff  # todo: change this to User
+        model = CustomUser  # todo: change this to User
         fields = [
             "first_name",
             "last_name",
@@ -63,7 +62,7 @@ class UserStaffUpdateSerializer(serializers.ModelSerializer):
 
 class UserGuestUpdateSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Staff  # todo: change this to User
+        model = CustomUser  # todo: change this to User
         fields = [
             "first_name",
             "last_name",

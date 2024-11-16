@@ -1,6 +1,6 @@
 from reservations.models import Reservation
 from django.urls import reverse
-from staffs.models import Staff
+from users.models import CustomUser
 from rooms.models import Room
 from django.contrib.auth.models import Group
 import json
@@ -16,8 +16,7 @@ def make_reservation_in_db(
     payment_status,
     paid_amount,
     payment_method,
-    guest_id,
-    staff_id,
+    user_id,
     room_id,
 ):
     reservation = Reservation(
@@ -27,8 +26,7 @@ def make_reservation_in_db(
         payment_status=payment_status,
         paid_amount=paid_amount if paid_amount else 0,
         payment_method=payment_method if payment_method else None,
-        guest_id=guest_id,
-        staff_id=staff_id,
+        user_id=user_id,
         room_id=room_id,
     )
     reservation.save()
@@ -36,7 +34,7 @@ def make_reservation_in_db(
 
 
 def make_user_in_db(email, password, role, username):
-    user = Staff.objects.create_user(
+    user = CustomUser.objects.create_user(
         username=username, email=email, password=password
     )  # todo: change Staff to User
     user.role = role
@@ -99,8 +97,7 @@ def make_reservation_payload(
     payment_status,
     paid_amount,
     payment_method,
-    guest,
-    staff,
+    user,
     room,
 ):
     return {
@@ -110,8 +107,7 @@ def make_reservation_payload(
         "payment_status": payment_status,
         "paid_amount": paid_amount,
         "payment_method": payment_method,
-        "guest": guest,
-        "staff": staff,
+        "user": user,
         "room": room,
     }
 
